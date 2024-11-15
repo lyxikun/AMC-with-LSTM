@@ -38,8 +38,9 @@ class LSTM(nn.Module):
     def forward(self, x):
         h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(x.device)
         c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(x.device)
-        # h0 = torch.nn.init.normal_(h0, mean=0, std=1)
-        # c0 = torch.nn.init.normal_(c0, mean=0, std=1)
+        #权重正态分布
+        h0 = torch.nn.init.normal_(h0, mean=0, std=1)
+        c0 = torch.nn.init.normal_(c0, mean=0, std=1)
         out, (h0, c0) = self.lstm(x, (h0, c0))
 
         if self.ifatt:

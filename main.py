@@ -10,7 +10,7 @@ import matplotlib.pyplot as pl
 
 from torchsummary import summary
 
-MODE = 0
+MODE = 1
 MODULEPATH = './models/LSTM.pkl'
 
 if torch.cuda.is_available():
@@ -42,7 +42,9 @@ if __name__ == '__main__':
     #Using CrossEntropy theory as lossfunc
     criterion = nn.CrossEntropyLoss()
     #optimizer using adam
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+
+    scheduler = torch.optim.lr_scheduler.MultiplicativeLR(optimizer, lr_lambda=lambda epoch: 0.95)
 
     if torch.cuda.is_available():
         model.cuda()
@@ -82,8 +84,8 @@ if __name__ == '__main__':
 
             avg_loss = epoch_loss / len(train_loader)
             accuracy = correct_predictions / total_predictions * 100
-
-            print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {avg_loss:.4f}, Accuracy: {accuracy:.2f}%')
+            scheduler.step()
+            print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {avg_loss:.4f}, Accuracy: {accuracy:.2f}%, lr: {optimizer.param_groups[0]['lr']:.5f}')
 
 
         torch.save(model, save_dir)
