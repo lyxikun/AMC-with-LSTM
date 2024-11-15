@@ -1,4 +1,4 @@
-/.idea
-/__pycache__
-/models/*
-/datasets/*
+.idea
+__pycache__
+models/*
+datasets/*
